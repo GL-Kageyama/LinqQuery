@@ -2,120 +2,97 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-// This Code is need a mono.
-
 namespace LinqQuery
 {
-	class MainClass
-	{
-		public static void Main(string[] args)
-		{
-			var QueryObj = new QueryClass();
+    class MainClass
+    {
+        public static void Main(string[] args)
+        {
+            var queryClass = new QueryClass();
 
-			QueryObj.QueryLength();
+            queryClass.QueryLength();
 
-			QueryObj.QueryLower();
+            queryClass.QueryLower();
 
-			QueryObj.QuerySelect();
+            queryClass.QuerySelect();
 
-			QueryObj.QueryDeferred();
+            queryClass.QueryDeferred();
 
-			// リストの中身は書き換えられている
-			QueryObj.QueryLength();
+            // The contents of the list have been rewritten
+            queryClass.QueryLength();
 
-			QueryObj.QueryImmediate();
-		}
-	}
+            queryClass.QueryImmediate();
+        }
+    }
 
-	class QueryClass
-	{
-		List<string> names = new List<string>
-		{
-			"Tokyo", "New Delhi", "Bangkok", "London", "Paris", "Canberra", "Hong Kong", "Amsterdam", "Ankara", "Napoli", 
-			"Nazca", "Nairobi", "Yangon", "Yalta", "Southsampton", "San Diego", "Santos", "Seattle", "Jakarta", "Shanghai", 
-		};
+    class QueryClass
+    {
+        List<string> citys = new List<string>
+        {
+            "Tokyo", "New Delhi", "Bangkok", "London", "Paris", 
+            "Canberra", "Hong Kong", "Amsterdam", "Ankara", "Napoli", 
+            "Nazca", "Nairobi", "Yangon", "Yalta", "Southsampton", 
+            "San Diego", "Santos", "Seattle", "Jakarta", "Shanghai", 
+        };
 
-		// 5文字以下の都市名を抽出
-		public void QueryLength()
-		{
-			IEnumerable<string> query = names.Where(s => s.Length <= 5);
-			foreach (string s in query)
-				Console.WriteLine(s);
-			Console.WriteLine();
-		}
+        // Extract city names of 5 characters or less
+        public void QueryLength()
+        {
+            IEnumerable<string> query = citys.Where(s => s.Length <= 5);
+            foreach (string s in query)
+                Console.WriteLine(s);
+            Console.WriteLine();
+        }
 
-		// 5文字以下の都市名を小文字に変換
-		public void QueryLower()
-		{
-			var query = names.Where(s => s.Length <= 5)
-							.Select(s => s.ToLower());
-			foreach (string s in query)
-				Console.WriteLine(s);
-			Console.WriteLine();
-		}
+        // Convert city names of 5 characters or less to lowercase
+        public void QueryLower()
+        {
+            var query = citys.Where(s => s.Length <= 5)
+                            .Select(s => s.ToLower());
+            foreach (string s in query)
+                Console.WriteLine(s);
+            Console.WriteLine();
+        }
 
-		// 都市名を文字数に変換
-		public void QuerySelect()
-		{
-			var query = names.Select(s => s.Length);
-			foreach (var n in query)
-				Console.WriteLine("{0} ", n);
-			Console.WriteLine();
-		}
+        // Convert city name to number of characters
+        public void QuerySelect()
+        {
+            var query = citys.Select(s => s.Length);
+            foreach (var n in query)
+                Console.WriteLine("{0} ", n);
+            Console.WriteLine();
+        }
 
-		// 0番目と6番目を名称変更して遅延実行
-		public void QueryDeferred()
-		{
-			var query = names.Where(s => s.Length <= 5);
-			foreach (var item in query)
-				Console.WriteLine(item);
-			Console.WriteLine("- - -");
+        // Rename the 0th and 6th and delay execution
+        public void QueryDeferred()
+        {
+            var query = citys.Where(s => s.Length <= 5);
+            foreach (var item in query)
+                Console.WriteLine(item);
+            Console.WriteLine("- - -");
 
-			names[0] = "Kyoto";
-			names[6] = "Koube";
-			foreach (var item in query)
-				Console.WriteLine(item);
-			Console.WriteLine();
-		}
+            citys[0] = "Kyoto";
+            citys[6] = "Koube";
+            foreach (var item in query)
+                Console.WriteLine(item);
+            Console.WriteLine();
+        }
 
-		// 即時実行（0番目と6番目を名称変更）
-		public void QueryImmediate()
-		{
-			var query = names.Where(s => s.Length <= 5).ToArray();
-			foreach (var item in query)
-				Console.WriteLine(item);
-			Console.WriteLine("- - -");
+        // Immediate execution (rename 0th and 6th)
+        public void QueryImmediate()
+        {
+            var query = citys.Where(s => s.Length <= 5).ToArray();
+            foreach (var item in query)
+                Console.WriteLine(item);
+            Console.WriteLine("- - -");
 
-			// ToArray関数が呼び出された時にクエリが実行されるため、以下の変換は反映されない
-			names[0] = "Gihu";
-			names[6] = "Salem";
-			foreach (var item in query)
-				Console.WriteLine(item);
-			Console.WriteLine();
-		}
-	}
+            // Since the query is executed when the ToArray function is called, 
+            // the following transformations are not reflected
+            citys[0] = "Gihu";
+            citys[6] = "Salem";
+            foreach (var item in query)
+                Console.WriteLine(item);
+            Console.WriteLine();
+        }
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
